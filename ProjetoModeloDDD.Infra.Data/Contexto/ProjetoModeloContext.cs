@@ -1,5 +1,6 @@
 ﻿
 using ProjetoModeloDDD.Domain.Entities;
+using ProjetoModeloDDD.Infra.Data.EntityConfig;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -30,6 +31,7 @@ namespace ProjetoModeloDDD.Infra.Data.Contexto
             modelBuilder.Properties<string>()
                 .Configure(p => p.HasMaxLength(100)); //Caso não informa o tamanho do tipo varchar, por padrão cria com tamanho de 100
 
+            modelBuilder.Configurations.Add(new ClienteConfiguration());
         }
 
         public override int SaveChanges()
