@@ -14,6 +14,7 @@ namespace ProjetoModeloDDD.Infra.Data.Contexto
         public ProjetoModeloContext() : base("ProjetoModeloDDD") { }
 
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -32,6 +33,7 @@ namespace ProjetoModeloDDD.Infra.Data.Contexto
                 .Configure(p => p.HasMaxLength(100)); //Caso não informa o tamanho do tipo varchar, por padrão cria com tamanho de 100
 
             modelBuilder.Configurations.Add(new ClienteConfiguration());
+            modelBuilder.Configurations.Add(new ProdutoConfiguration());
         }
 
         public override int SaveChanges()
