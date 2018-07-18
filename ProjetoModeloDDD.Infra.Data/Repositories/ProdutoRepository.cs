@@ -1,6 +1,7 @@
 ﻿
 
 using System.Collections.Generic;
+using System.Linq;
 using ProjetoModeloDDD.Domain.Entities;
 using ProjetoModeloDDD.Domain.Interfaces;
 
@@ -10,7 +11,7 @@ namespace ProjetoModeloDDD.Infra.Data.Repositories
     {
         public IEnumerable<Produto> BuscarPorNome(string nome)
         {
-            throw new System.NotImplementedException();
+            return Db.Produtos.Where(p => p.Nome == nome);
         }
     }
 }
