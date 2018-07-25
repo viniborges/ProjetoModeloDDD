@@ -1,4 +1,5 @@
 ﻿using ProjetoModeloDDD.Domain.Interfaces;
+using ProjetoModeloDDD.Domain.Interfaces.Repositories;
 using ProjetoModeloDDD.Infra.Data.Contexto;
 using System;
 using System.Collections.Generic;
