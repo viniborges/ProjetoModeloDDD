@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjetoModeloDDD.Domain.Interfaces.Services
 {
-    interface IClienteService : IServiceBase<Cliente>
+    public interface IClienteService : IServiceBase<Cliente>
     {
         IEnumerable<Cliente> ObterClientesEspeciais(IEnumerable<Cliente> clientes); 
     }
