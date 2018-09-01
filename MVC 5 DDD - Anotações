@@ -1,0 +1,109 @@
+Projeto modelo DDD, Eduardo Pires: https://www.youtube.com/watch?v=i9Il79a2uBU
+
+MVC 5 DDD - Anotações
+
+MVC é apenas a camada de apresentação e visa apenas a sepação de responsabilidades.
+
+DDD -> desenvolvimento guiado pelo domínio, com isolamente e abstração de camadas (elas não se conhecem). Implementação através de interfaces (usando injeção de dependencia). Camada Domínio não conhece ninguém, mas todas as outras conhecem a domínio.
+	-> Entidades (classes que possuem métodos e entidades, estados e comportamentos)
+	-> Objetos de Valor
+	-> Contratos (Interfaces)
+	-> Serviços (classes que as entidades)
+	-> Factories
+
+Visual Studio Solution -> Blank Solution
+Criar pastas (ordem das camadas)
+	0 - Presentation
+	1 - Services
+	2 - Application
+	3 - Domain
+	4 - Infra
+		4.1 - Data
+		4.2 - CrossCutting (camada transversal - atende todas as camadas)
+Na camada 0, criar projeto web MVC com ".MVC"
+Na camada 3, criar projeto do tipo Class Library com ".Domain"
+	Remover referências
+Na camada 4.1, criar projeto do tipo Class Library com ".Infra.Data"
+Na camada 2, criar projeto do tipo Class Library com ".Application"
+
+Na camada 3, criar as pastas:
+	Entities
+	Interfaces
+	Services
+
+Na camada 4.1, criar as pastas
+	Contexto
+	Repositories
+	EntityConfig
+
+Na camada 4.1, adicionar referência da camada 3.1 (domínio)
+
+na camada 3/Entities, adicionar classe Cliente
+
+Na camada 4.1/Contexto, criar classe ProjetoModeloContext
+
+Instalar o EntityFramework no projeto 4.1 via nuget
+
+Adicionar cs no web.config  do projeto MVC
+
+enable-migrations: processo do EF que automatiza criação de scripts e executa modificações na base (modelagem de banco)
+update-database -Verbose 
+
+Seed: popula o db com dados iniciais
+
+Convenções do EF
+	No contexto dar um override no OnModelCreating
+		modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();//Remove delação em cascata quando tiver uma relação 1->n
+        modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();//Remove delação em cascata quando tiver uma relação n->n
+        modelBuilder.Properties<string>().Configure(p => p.HasColumnType("varchar")); //Configura propriedade do tipo string como varchar ao invés de nvarchar
+        modelBuilder.Properties<string>().Configure(p => p.HasMaxLength(100)); //Caso não informa o tamanho do tipo varchar, por padrão cria com tamanho de 100
+
+    No contexto dar um override no SaveChanges é possível manipular as propriedades que terão comportamentos em comum, como por exemplo colocar a data atual na coluna "DataCadastro"
+
+Na camada 4.1/EntityConfiguration
+	Criar classe de configuração de entidade, herdando EntityTypeConfiguration
+
+No projeto MVC não precisa saber que usa EF ou qual banco usa. O MVC é ignorante, por isso precisa usar uma camada de repositório
+
+Adicionar no 3/Interfaces/Repositories, a interface IRepositoryBase (só faz CRUD)
+Adicionar no 3/Interfaces/Repositories, a interface IClienteRepository (só faz CRUD) herdando de IRepositoryBase<Cliente>
+
+Adicionar na 4.1/Repositories a classe RepositoryBase que servirá de repositório genérico.
+Adcionar na 4.1/Repositories a classe ClienteRepository que servirá de repositório especializado
+
+ViewModew - ViewController
+ViewModels não deve ter comportamentos, são apenas representações 
+
+Adicionar na camada de repretation a referência a camada de dominio
+
+Na representation adicionar pasta para o AutoMapper e criar classes "AutoMapperConfig", "DomainToViewModelMappingProfile" e "ViewModelToDomainMappingProfile"
+
+Adicionar AutoMapper via nuget: Install-Package AutoMapper
+
+Registrar os mapeamentos no AutoMapperConfig
+
+Na 3/Interfaces, criar diretório Services
+
+Na 3/Interfaces/Services, criar classe IServiceBase genérica.
+
+Na 3/Interfaces/Services, criar classe IClienteService herdando de IServiceBase
+
+Criar classes concreta de serviço que fazem parte do domínio.
+
+O Dominio é agnóstico. Não pode adicionar nada que prenda o dominio ao projeto. O dominio é desacoplado.
+
+Na classe 3/Services, criar classe ServiceBase herdando de IServiceBase
+
+Adicionar interfaces genéricas e especializadas na 2/Application
+
+Adicionar classes das especializadas
+
+Configurar o ninject para injeção de dependencias
+
+Na presentatio, criar as controlers e views
+
+Usar respository genérico e depois especializa-o
+Sim, repete tudo pois fica isolado e abstraido.
+
+https://www.youtube.com/watch?v=i9Il79a2uBU
